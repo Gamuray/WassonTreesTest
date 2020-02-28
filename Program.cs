@@ -53,10 +53,18 @@ namespace WassonTreesTest
                         
                         if(myTree.root.left != null || myTree.root.right != null)
                         {
-                            String replaceNode = myTree.Delete(myTree.root, null, deleteKey);
-                            if(replaceNode != null)
+                            String replaceNode = myTree.Delete(myTree.root, null, null, deleteKey);
+                            if(replaceNode != "")
                             {
-                                Console.WriteLine("Node " + deleteKey + " was removed and replaced with node " + replaceNode + ".");
+                                if(deleteKey == Int32.Parse(replaceNode))
+                                {
+                                    Console.WriteLine("Node " + replaceNode + " was removed.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Node " + deleteKey + " was removed and replaced with node " + replaceNode + ".");
+                                }
+                                
                             }
                             else
                             {
@@ -177,7 +185,7 @@ namespace WassonTreesTest
 
         }
 
-        public String Delete(Node rootNode, Node keyNode, int key)
+        public String Delete(Node rootNode, Node prevNode, Node keyNode, int key)
         {
             String oldKey = "";
             if(rootNode.key == key)
@@ -185,22 +193,29 @@ namespace WassonTreesTest
                 keyNode = rootNode;
             }
 
-            if(rootNode.left == null && rootNode.right == null && keyNode != null)
+            if(rootNode.left == null && rootNode.right == null && keyNode != null && prevNode != null)
             {
                 keyNode.key = rootNode.key;
                 oldKey = rootNode.key.ToString();
-                rootNode = null;
+                if(prevNode.left == rootNode)
+                {
+                    prevNode.left = null;
+                }
+                else
+                {
+                    prevNode.right = null;
+                }
                 return oldKey;
             }
             else
             {
-                if(rootNode.left != null)
+                if(rootNode.left != null && oldKey == "") //if the root key is blank, we haven't yet found our requirements, if it has contents, then don't bother, we've accomplished our deletion
                 {
-                   oldKey = Delete(rootNode.left, keyNode, key);
+                   oldKey = Delete(rootNode.left, rootNode, keyNode, key); //pass along the new node, the previous node, the keyed node (if found) and the key
                 }
-                if(rootNode.right != null)
+                if(rootNode.right != null && oldKey == "")
                 {
-                    oldKey = Delete(rootNode.right, keyNode, key);
+                    oldKey = Delete(rootNode.right, rootNode, keyNode, key);
                 }
 
                 if(oldKey != "")
@@ -209,7 +224,7 @@ namespace WassonTreesTest
                 }
                 else
                 {
-                    return null;
+                    return "";
                 }
                 
             }
