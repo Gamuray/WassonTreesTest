@@ -187,17 +187,18 @@ namespace WassonTreesTest
 
         public String Delete(Node rootNode, Node prevNode, Node keyNode, int key)
         {
-            String oldKey = "";
-            if(rootNode.key == key)
+            String oldKey = ""; //Returns the key of the node that gets moved/cut off
+            if(rootNode.key == key) //If the current node is the node we want, save it for later
             {
                 keyNode = rootNode;
             }
 
-            if(rootNode.left == null && rootNode.right == null && keyNode != null && prevNode != null)
+            //If the current node has no children and we've found the node to delete, and its not the tree's root, proceed to deletion
+            if (rootNode.left == null && rootNode.right == null && keyNode != null && prevNode != null)
             {
                 keyNode.key = rootNode.key;
                 oldKey = rootNode.key.ToString();
-                if(prevNode.left == rootNode)
+                if(prevNode.left == rootNode) //Determine which child node is our current node and cut it off
                 {
                     prevNode.left = null;
                 }
